@@ -1,5 +1,7 @@
 # openapi-3.0-nullable-object-example
 
+Feel free to leave any questions or comments in the [issues](./issues)!
+
 ## To use
 
 ```
