@@ -1,0 +1,233 @@
+openapi: 3.0.0
+info:
+  title: Test API
+  version: '1.0.0'
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: A 200 Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nullableObject:
+                    type: object
+                    nullable: true
+                    properties:
+                      id:
+                        type: integer
+
+                  # allOf
+                  notActuallyNullableObjectWithAllOf:
+                    type: object
+                    nullable: true
+                    allOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: integer
+                      - type: object
+                        properties:
+                          anotherId:
+                            type: integer
+                  notActuallyNullableObjectWithAllOfAndNullableOptions:
+                    allOf:
+                      - type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: integer
+                      - type: object
+                        properties:
+                          anotherId:
+                            type: integer
+                  notActuallyNullableObjectWithAllOfRefs:
+                    type: object
+                    nullable: true
+                    allOf:
+                      - $ref: '#/components/schemas/SomeReferencedObject'
+                      - $ref: '#/components/schemas/AnotherReferencedObject'
+                  nullableObjectWithAllOfAndNullableOptions:
+                    allOf:
+                      - type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: integer
+                      - type: object
+                        nullable: true
+                        properties:
+                          anotherId:
+                            type: integer
+                  nullableObjectWithAllOf:
+                    anyOf:
+                      - type: object
+                        nullable: true
+                      - type: object
+                        allOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: integer
+                          - type: object
+                            properties:
+                              anotherId:
+                                type: integer
+                  nullableObjectWithAllOfRefs:
+                    anyOf:
+                      - type: object
+                        nullable: true
+                      - type: object
+                        allOf:
+                          - $ref: '#/components/schemas/SomeReferencedObject'
+                          - $ref: '#/components/schemas/AnotherReferencedObject'
+
+                  # anyOf
+                  notActuallyNullableObjectWithAnyOf:
+                    type: object
+                    nullable: true
+                    anyOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: integer
+                      - type: object
+                        properties:
+                          anotherId:
+                            type: integer
+                  nullableObjectWithAnyOf:
+                    anyOf:
+                      - type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: integer
+                      - type: object
+                        properties:
+                          anotherId:
+                            type: integer
+                  notActuallyNullableObjectWithAnyOfRefs:
+                    type: object
+                    nullable: true
+                    anyOf:
+                      - $ref: '#/components/schemas/SomeReferencedObject'
+                      - $ref: '#/components/schemas/AnotherReferencedObject'
+                  nullableObjectWithAnyOfRefs:
+                    anyOf:
+                      - type: object
+                        nullable: true
+                      - $ref: '#/components/schemas/SomeReferencedObject'
+                      - $ref: '#/components/schemas/AnotherReferencedObject'
+
+                  # oneOf
+                  notActuallyNullableObjectWithOneOf:
+                    type: object
+                    nullable: true
+                    oneOf:
+                      - type: object
+                        properties:
+                          id:
+                            type: integer
+                      - type: object
+                        properties:
+                          anotherId:
+                            type: integer
+                  nullableObjectWithOneOf:
+                    # important: do not include type: object at this level
+                    oneOf:
+                      - type: object
+                        nullable: true
+                        properties:
+                          id:
+                            type: integer
+                      - type: object
+                        properties:
+                          anotherId:
+                            type: integer
+                  notActuallyNullableObjectWithOneOfRefs:
+                    type: object
+                    nullable: true
+                    oneOf:
+                      - $ref: '#/components/schemas/SomeReferencedObject'
+                      - $ref: '#/components/schemas/AnotherReferencedObject'
+
+                  normalNullableRef:
+                    $ref: '#/components/schemas/NormalNullableRef'
+                  notActuallyNullableRefAllOf:
+                    $ref: '#/components/schemas/NotActuallyNullableRefWithAllOf'
+                  nullableRefAllOf:
+                    $ref: '#/components/schemas/NullableRefWithAllOf'
+                  nullableRefOneOf:
+                    $ref: '#/components/schemas/NullableRefWithOneOf'
+                  refWithNullableReferencesOneOf:
+                    $ref: '#/components/schemas/RefWithNullableReferencesOneOf'
+                  refWithNullableReferencesAllOf:
+                    $ref: '#/components/schemas/RefWithNullableReferencesAllOf'
+                  refWithNotActuallyNullableReferencesAllOf:
+                    $ref: '#/components/schemas/RefWithNotActuallyNullableReferencesAllOf'
+
+components:
+  schemas:
+    SomeReferencedObject:
+      type: object
+      properties:
+        id:
+          type: integer
+    NullableReferencedObject:
+      type: object
+      nullable: true
+      properties:
+        anotherId:
+          type: integer
+    NullableReferencedObject2:
+      type: object
+      nullable: true
+      properties:
+        yetAnotherId:
+          type: integer
+    AnotherReferencedObject:
+      type: object
+      properties:
+        otherId:
+          type: integer
+    NormalNullableRef:
+      type: object
+      nullable: true
+      properties:
+        id:
+          type: integer
+    NotActuallyNullableRefWithAllOf:
+      type: object
+      nullable: true
+      allOf:
+        - $ref: '#/components/schemas/SomeReferencedObject'
+    NullableRefWithAllOf:
+      anyOf:
+        - type: object
+          nullable: true
+        - type: object
+          allOf:
+            - $ref: '#/components/schemas/SomeReferencedObject'
+    NullableRefWithOneOf:
+      anyOf:
+        - type: object
+          nullable: true
+        - type: object
+          oneOf:
+            - $ref: '#/components/schemas/SomeReferencedObject'
+            - $ref: '#/components/schemas/AnotherReferencedObject'
+    RefWithNullableReferencesOneOf:
+      oneOf:
+        - $ref: '#/components/schemas/NullableReferencedObject'
+        - $ref: '#/components/schemas/AnotherReferencedObject'
+    RefWithNullableReferencesAllOf:
+      allOf:
+        - $ref: '#/components/schemas/NullableReferencedObject'
+        - $ref: '#/components/schemas/NullableReferencedObject2'
+    RefWithNotActuallyNullableReferencesAllOf:
+      allOf:
+        - $ref: '#/components/schemas/SomeReferencedObject'
+        - $ref: '#/components/schemas/NullableReferencedObject'
